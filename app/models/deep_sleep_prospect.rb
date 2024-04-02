@@ -1,0 +1,2 @@
+class DeepSleepProspect < ApplicationRecord
+end

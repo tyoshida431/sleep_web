@@ -1,0 +1,2 @@
+class SleepProspect < ApplicationRecord
+end

@@ -1,0 +1,15 @@
+<h1>Hello,World.</h1>
+<table border=1>
+<% @Sleep.each do |sleep| %>
+  <tr> 
+    <td><%= sleep.date %></td>
+    <td><%= sleep.wake %></td>
+    <td><%= sleep.bath %></td>
+    <td><%= sleep.bed %></td>
+    <td><%= sleep.sleep_in %></td>
+    <td><%= sleep.sleep %></td>
+    <td><%= sleep.deep_sleep %></td>
+    <td><%= sleep.description %></td>
+  </tr>
+<% end %>
+</table>
