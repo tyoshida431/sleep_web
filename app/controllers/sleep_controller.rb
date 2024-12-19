@@ -7,7 +7,6 @@ class SleepController < ApplicationController
     begin
       # 指定の日付をGETパラメーターから取得する。
       # なければ今月を指定する。
-      #logger.debug params
       year_month=params[:month]
       # 今月を指定します。
       year=0
