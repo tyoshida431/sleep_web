@@ -9,28 +9,7 @@ class SleepController < ApplicationController
       # なければ今月を指定する。
       year_month=params[:month]
       # 今月を指定します。
-      year=0
-      month=0
-      if year_month==nil then
-        today=DateTime.now.to_s
-        year_month=""
-        year_month+=today[0,4] 
-        year_month+=today[5,2]
-      end
-      # 指定の日付の一覧を取得する。
-      year=year_month[0,4].to_i
-      month=year_month[4,2].to_i
-      # 月初めと月最後
-      first_day=Date.new(year.to_i,month.to_i).strftime("%Y-%m-%d")
-      last_day=Date.new(year.to_i,month.to_i,-1).strftime("%Y-%m-%d")
-      sleeps=Sleep.where("date>=? AND date<=?",first_day,last_day)
-      # もしレコードが月末まで足りなかったらinsertします。
-      # 新しい月の場合も月末まで足りないと判定してinsertします。
-      if is_fragment(sleeps,year_month) then
-        # クライアントからGETが走るので返さない。
-        #sleeps=insert_new_month(sleeps,year_month)
-        insert_new_month(sleeps,year_month)
-      end
+      sleeps=Sleep.get_list(year_month)
     rescue => e
       logger.fatal e
       sleeps=[]
