@@ -3,10 +3,9 @@ class Sleep < ApplicationRecord
     begin
       # 指定の日付をGETパラメーターから取得する。
       # なければ今月を指定する。
-      #year_month=params[:month]
-      # 今月を指定します。
       year=0
       month=0
+      # 今月を指定します。
       if year_month==nil then
         today=DateTime.now.to_s
         year_month=""

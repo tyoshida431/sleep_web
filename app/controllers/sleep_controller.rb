@@ -6,9 +6,8 @@ class SleepController < ApplicationController
   def index
     begin
       # 指定の日付をGETパラメーターから取得する。
-      # なければ今月を指定する。
       year_month=params[:month]
-      # 今月を指定します。
+      # 睡眠一覧を取得します。
       sleeps=Sleep.get_list(year_month)
     rescue => e
       logger.fatal e
