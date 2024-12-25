@@ -20,14 +20,8 @@ class SleepController < ApplicationController
   def update()
     begin
       info=request.raw_post
-      data=JSON.parse(info)
-      logger.debug "update called"
-      ActiveRecord::Base.transaction do
-        data.each{ |value|
-          @sleep=Sleep.where("date=?",value['date'])
-          @sleep.update(wake: value['wake'],bath: value['bath'],bed: value['bed'],sleep_in: value['sleep_in'],sleep: value['sleep'],deep_sleep: value['deep_sleep'],description: value['description'])
-        }
-      end
+      sleeps=JSON.parse(info)
+      Sleep.update(sleeps)
     rescue => e
       logger.fatal e
     end

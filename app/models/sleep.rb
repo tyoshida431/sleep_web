@@ -26,6 +26,7 @@ class Sleep < ApplicationRecord
         insert_new_month(sleeps,year_month)
       end
     rescue => e
+      logger.fatal "一覧取得失敗"
       logger.fatal e
       sleeps=[]
     end
@@ -90,6 +91,19 @@ class Sleep < ApplicationRecord
     end
     ActiveRecord::Base.transaction do
       self.insert_all(insert_sleeps)
+    end
+  end
+  def self.update(sleeps)
+    begin
+      ActiveRecord::Base.transaction do
+        sleeps.each{ |value|
+          @sleep=Sleep.where("date=?",value['date'])
+          @sleep.update(wake: value['wake'],bath: value['bath'],bed: value['bed'],sleep_in: value['sleep_in'],sleep: value['sleep'],deep_sleep: value['deep_sleep'],description: value['description'])
+        }
+      end
+    rescue => e
+      logger.fatal "更新失敗"
+      logger.fatal e
     end
   end
 end
