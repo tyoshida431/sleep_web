@@ -98,7 +98,7 @@ class Sleep < ApplicationRecord
       ActiveRecord::Base.transaction do
         sleeps.each{ |value|
           @sleep=Sleep.where("date=?",value['date'])
-          @sleep.update(wake: value['wake'],bath: value['bath'],bed: value['bed'],sleep_in: value['sleep_in'],sleep: value['sleep'],deep_sleep: value['deep_sleep'],description: value['description'])
+          @sleep.update!(wake: value['wake'],bath: value['bath'],bed: value['bed'],sleep_in: value['sleep_in'],sleep: value['sleep'],deep_sleep: value['deep_sleep'],description: value['description'])
         }
       end
     rescue => e
