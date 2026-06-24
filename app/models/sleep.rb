@@ -24,6 +24,8 @@ class Sleep < ApplicationRecord
       if is_fragment(sleeps,year_month) then
         # クライアントからGETが走るので返さない。
         insert_new_month(sleeps,year_month)
+        # クライアントからGETが走らなくなったので返します。
+        sleeps=self.where("date>=? AND date<=?",first_day,last_day)
       end
     rescue => e
       logger.fatal "一覧取得失敗"
