@@ -19,11 +19,12 @@ class Sleep < ApplicationRecord
       first_day=Date.new(year.to_i,month.to_i).strftime("%Y-%m-%d")
       last_day=Date.new(year.to_i,month.to_i,-1).strftime("%Y-%m-%d")
       sleeps=self.where("date>=? AND date<=?",first_day,last_day)
-      # もしレコードが月末まで足りなかったらinsertします。
-      # 新しい月の場合も月末まで足りないと判定してinsertします。
-      if is_fragment(sleeps,year_month) then
+      # 新しい月の場合判定してinsertします。
+      if is_new_month(sleeps) then
         # クライアントからGETが走るので返さない。
+        # クライアントからGETが走らなくなったので返します。2026/06/08.
         insert_new_month(sleeps,year_month)
+        sleeps=self.where("date>=? AND date<=?",first_day,last_day)
       end
     rescue => e
       logger.fatal "一覧取得失敗"
@@ -33,35 +34,13 @@ class Sleep < ApplicationRecord
     return sleeps
   end
 
-  def self.is_fragment(sleeps,year_month)
+  def self.is_new_month(sleeps)
     ret=true
-    # sleepsの長さが0だったら半端であると返す。
-    if sleeps.length!=0 then
-      sleep=sleeps[-1] 
-      last_day=sleep.date
-      # 年、月を取得する。
-      year=year_month[0,4]
-      month=year_month[4,2]
-      # 対象年月日の月末を取得する。
-      # 一ヶ月書けてなくて新しく挿入する場合を考える。
-      # あるいは今月新しく始める程度か。今月新しく始めて良いかもしれない。
-      # 毎日徹夜続きで半端にしか書けない人もいるかも知れない。
-      last_day_for_month=Date.new(year.to_i,month.to_i,-1).strftime("%Y-%m-%d").split("-")
-      year_last_day=last_day_for_month[0] 
-      month_last_day=last_day_for_month[1]
-      day_last_day=last_day_for_month[2]
-
-      # DBから取得したデーターを整形する。
-      last_day_from_db=last_day.to_s.split("-")
-      year_db=last_day_from_db[0]
-      month_db=last_day_from_db[1]
-      day_db=last_day_from_db[2]
-
-      # 比較する。
-      if year_last_day==year_db and month_last_day==month_db and day_last_day==day_db then
-        ret=false
-      end
-    end 
+    if sleeps.length==0 then
+      ret=true
+    else
+      ret=false
+    end
     return ret
   end
 
