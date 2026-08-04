@@ -45,27 +45,22 @@ class Sleep < ApplicationRecord
   end
 
   def self.insert_new_month(sleeps,year_month)
-    # 足りないところから月末まで一覧します。
+    # 月末まで一覧します。
     year=year_month[0,4]
     month=year_month[4,2]
-    last_sleep=sleeps[-1]
-    if last_sleep==nil then
-      # 00から始めて1日から作る
-      last_day=year+"00"
-    else
-      last_day=last_sleep.date
-    end
-    last_day_for_month=Date.new(year.to_i,month.to_i,-1).strftime("%Y-%m-%d").split("-")
-    last_day_fragment=last_day.to_s[9,2].to_i
-    last_day_for_month_day=last_day_for_month[2].to_i
+    # 月頭から決め打ちで00から始めて1日から作る
+    first_day=year+"00"
+    last_day=Date.new(year.to_i,month.to_i,-1).strftime("%Y-%m-%d").split("-")
+    first_day_num=first_day.to_s[9,2].to_i
+    last_day_num=last_day[2].to_i
     insert_sleeps=[]
-    while last_day_fragment!=last_day_for_month_day do
-      last_day_fragment=last_day_fragment+1
-      last_day_fragment_pad=last_day_fragment.to_s
-      if last_day_fragment_pad.length==1 then
-        last_day_fragment_pad="0"+last_day_fragment_pad
+    while first_day_num!=last_day_num do
+      first_day_num=first_day_num+1
+      first_day_fragment_pad=first_day_num.to_s
+      if first_day_fragment_pad.length==1 then
+        first_day_fragment_pad="0"+first_day_fragment_pad
       end
-      day=year+"-"+month+"-"+last_day_fragment_pad
+      day=year+"-"+month+"-"+first_day_fragment_pad
       insert_sleeps << {date: day,wake: 0,bath: 0,bed: 0,sleep_in: "",sleep: "",deep_sleep: "",description: ""}
     end
     ActiveRecord::Base.transaction do
