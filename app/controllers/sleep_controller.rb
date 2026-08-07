@@ -1,6 +1,7 @@
 require 'date'
 
 class SleepController < ApplicationController
+  # gitテスト。
   # 一時で無効にする
   protect_from_forgery with: :null_session
   def index
